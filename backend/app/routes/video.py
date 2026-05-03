@@ -13,7 +13,7 @@ from app.schemas import RoiListResponse, RoiResponse, UploadResponse
 
 router = APIRouter(prefix="/api", tags=["video"])
 
-_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "uploads")
+_UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "uploads")
 os.makedirs(_UPLOAD_DIR, exist_ok=True)
 
 
