@@ -32,9 +32,11 @@ def upload_video(file: UploadFile, db: Session = Depends(get_db)):
     frame_size = meta.get("size")
 
     if not frame_size:
-        raise HTTPException(status_code=400, detail="Could not read video metadata")
+        raise HTTPException(
+            status_code=400, detail="Could not read video metadata")
 
-    writer = imageio.get_writer(output_path, fps=fps, codec="libx264", macro_block_size=1)
+    writer = imageio.get_writer(
+        output_path, fps=fps, codec="libx264", macro_block_size=1)
     detector = FaceDetector()
     last_roi: Roi | None = None
     total_frames = 0
@@ -43,7 +45,8 @@ def upload_video(file: UploadFile, db: Session = Depends(get_db)):
         for frame in reader:
             total_frames += 1
 
-            should_detect = total_frames == 1 or (total_frames - 1) % DETECT_EVERY_N_FRAMES == 0
+            should_detect = total_frames == 1 or (
+                total_frames - 1) % DETECT_EVERY_N_FRAMES == 0
 
             if should_detect:
                 roi = detector.detect(frame)
@@ -87,7 +90,8 @@ def upload_video(file: UploadFile, db: Session = Depends(get_db)):
 def stream_video(video_id: str):
     file_path = os.path.join(_UPLOAD_DIR, f"processed_{video_id}.mp4")
     if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail=f"Processed video {video_id} not found")
+        raise HTTPException(status_code=404, detail=f"Processed video {
+                            video_id} not found")
 
     return FileResponse(
         file_path,
@@ -106,7 +110,8 @@ def get_roi(video_id: str, db: Session = Depends(get_db)):
     )
 
     if not rois:
-        raise HTTPException(status_code=404, detail=f"No ROI data for video {video_id}")
+        raise HTTPException(
+            status_code=404, detail=f"No ROI data for video {video_id}")
 
     return RoiListResponse(
         video_id=video_id,
