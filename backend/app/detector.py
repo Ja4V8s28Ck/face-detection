@@ -8,7 +8,11 @@ from mediapipe.tasks.python.vision import FaceDetector as MpFaceDetector
 from mediapipe.tasks.python.vision import FaceDetectorOptions, RunningMode
 from PIL import Image as PILImage, ImageDraw
 
-_MODEL_PATH = os.path.join(os.path.dirname(__file__), "models", "blaze_face_short_range.tflite")
+_MODEL_PATH = os.path.join(os.path.dirname(
+    __file__), "models", "blaze_face_short_range.tflite")
+
+CONFIDENCE_THRESHOLD = 0.7
+DETECT_EVERY_N_FRAMES = 5
 
 
 @dataclass
@@ -53,7 +57,7 @@ class FaceDetector:
             confidence=score,
         )
 
-    def draw_roi(self, image: np.ndarray, roi: Roi) -> PILImage.Image:
+    def draw_roi(self, image: np.ndarray, roi: Roi) -> np.ndarray:
         pil_image = PILImage.fromarray(image)
         draw = ImageDraw.Draw(pil_image)
         draw.rectangle(
@@ -61,4 +65,4 @@ class FaceDetector:
             outline="red",
             width=3,
         )
-        return pil_image
+        return np.array(pil_image)
